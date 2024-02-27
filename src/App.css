@@ -2,3 +2,10 @@
   max-width: 1280px;
   margin: 0 auto;
 }
+
+.icon {
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}

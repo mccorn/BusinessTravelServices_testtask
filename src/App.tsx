@@ -8,7 +8,7 @@ import { setImages } from './reducers/ImagesSlice.ts';
 function App() {
   const dispatch = useDispatch();
   const firstLoadRef = useRef(false);
-  const countPerScroll = 10;
+  const countPerScroll = 7;
 
   useEffect(() => {
     if (firstLoadRef.current === false) {

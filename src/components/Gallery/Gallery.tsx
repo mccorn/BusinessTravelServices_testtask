@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 
@@ -9,41 +9,39 @@ import Modal from '../Modal/Modal';
 import api from '../../api/GalleryAPI';
 
 import './Gallery.css'
+import Scrollbar from '../Scrollbar/Scrollbar';
 
 type GalleryProps = {
   countPerScroll: number,
 }
 
-function Gallery({countPerScroll = 4}: GalleryProps) {
+function Gallery({ countPerScroll = 4 }: GalleryProps) {
   const currentImageRef = useRef({} as ImageData);
   const dispatch = useDispatch();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
-  const [transform, setTransform] = useState("translateX(0px)");
-  const {images} = useSelector((state: RootState) => state.images);
- 
+  const { images } = useSelector((state: RootState) => state.images);
+
   const openModal = () => setIsOpenModal(true);
+
   const loadImages = () => api.getImages(countPerScroll)
     .then(data => dispatch(setImages(data)))
     .catch(console.log);
 
-  useEffect(() => {
-    setTransform(calcTransform(currentImageIdx));
-  }, [currentImageIdx])
-
   const setSlideIdx = (idx: number) => {
     currentImageRef.current = images[idx];
     setCurrentImageIdx(idx);
-
     if (idx > 0.7 * images.length) loadImages();
   }
 
-  const calcTransform = (idx: number) => {
-    if (idx < Math.ceil(countPerScroll / 2)) return `translateX(0px)`;
-
-    const dIdx = idx + 1 - countPerScroll / 2;
-    return `translateX(${-dIdx * 90 + 45}px)`;
-  }
+  const slides = useMemo(
+    () => images.map((image: ImageData, idx: number) => (
+      <div
+        className="icon"
+        style={{ backgroundImage: `url(${image.url})` }}
+        onClick={() => setSlideIdx(idx)}
+      ></div>
+    )), [images])
 
   return (
     <>
@@ -66,20 +64,13 @@ function Gallery({countPerScroll = 4}: GalleryProps) {
         </div>
         <div className="gallery__footer">
           <button onClick={() => setSlideIdx(currentImageIdx - 1)} disabled={currentImageIdx <= 0}>{"<<"}</button>
-          <div className="scrollbar">
-            <div className="scrollbar__body" style={{ transform: transform }}>
-              {
-                images.map((image: ImageData, idx: number) => (
-                  <div
-                    className={classNames("scrollbar__icon", { active: currentImageIdx === idx })}
-                    key={image.id}
-                    style={{ backgroundImage: `url(${image.url})` }}
-                    onClick={() => setSlideIdx(idx)}
-                  ></div>
-                ))
-              }
-            </div>
-          </div>
+          <Scrollbar
+            countPerScroll={countPerScroll}
+            currentSlideIdx={currentImageIdx}
+            onChangeSlideIdx={setSlideIdx}
+            slideConfig={{ width: 190, height: 120 }}
+            slides={slides}
+          />
           <button onClick={() => setSlideIdx(currentImageIdx + 1)}>{">>"}</button>
         </div>
       </div>

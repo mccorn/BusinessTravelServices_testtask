@@ -1,0 +1,25 @@
+.scrollbar {
+  display: flex;
+  overflow: hidden;
+
+  width: 900px;
+  padding: 2px;
+}
+
+.scrollbar__body {
+  display: flex;
+  transition: all 0.3s ease-in-out;
+}
+
+.scrollbar__slide {
+  width: 90px;
+  height: 60px;
+
+  display: flex;
+  align-items: stretch;
+}
+
+.scrollbar__slide.active {
+  outline: 2px solid white;
+  z-index: 1;
+}
