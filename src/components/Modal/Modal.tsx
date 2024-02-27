@@ -1,9 +1,20 @@
+import { ReactNode } from 'react'
 import './Modal.css'
+import classNames from 'classnames'
 
-function Modal() {
+type ModalProps = {
+  onClose: () => void,
+  isOpen: boolean,
+  children: ReactNode
+}
+
+const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   return (
-    <div>
-      Modal
+    <div
+      className={classNames("modal", {"hidden": !isOpen})}
+      onClick={onClose}
+    >
+      {children}
     </div>
   )
 }

@@ -44,6 +44,7 @@
 
 .scrollbar {
     display: flex;
+    gap: 5px;
 }
 
 .scrollbar__icon {
@@ -53,4 +54,39 @@
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
+}
+
+.scrollbar__icon.active {
+    outline: 2px solid white;
+    z-index: 1;
+}
+
+.modal__image {
+    position: relative;
+    width: 1190px;
+    height: 700px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.modal__imageBg {
+    position: absolute;
+    width: calc(100% + 60px);
+    height: calc(100% + 60px);
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    filter: blur(30px);
+}
+
+.modal__image img {
+    width: auto;
+    height: 100%;
+    z-index: 1;
 }
