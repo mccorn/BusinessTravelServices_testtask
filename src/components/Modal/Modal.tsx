@@ -11,10 +11,13 @@ type ModalProps = {
 const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   return (
     <div
-      className={classNames("modal", {"hidden": !isOpen})}
+      className={classNames("modal", { "hidden": !isOpen })}
       onClick={onClose}
     >
       {children}
+      <div className="modal__closeBtn">
+        &#9587;
+      </div>
     </div>
   )
 }

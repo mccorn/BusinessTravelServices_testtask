@@ -14,6 +14,20 @@
     justify-content: center;
 }
 
-.hidden {
+.modal.hidden {
     display: none;
+}
+
+.modal__closeBtn {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+
+    color: #FFFFFF50;
+    cursor: pointer;
+
+    &:hover {
+        color: white;
+        transform: scale(1.2);
+    }
 }
