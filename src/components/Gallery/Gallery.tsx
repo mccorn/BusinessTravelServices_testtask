@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames';
 
 import { setImages } from '../../reducers/ImagesSlice';
 import { RootState } from '../../store';
