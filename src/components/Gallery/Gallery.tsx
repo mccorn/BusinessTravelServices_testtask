@@ -1,44 +1,31 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import './Gallery.css'
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import Modal from '../Modal/Modal';
-import api from '../../GalleryAPI';
 
-type ImageData = {
-  height: number,
-  width: number,
-  id: string,
-  url: string,
+import { setImages } from '../../reducers/ImagesSlice';
+import { RootState } from '../../store';
+import { ImageData } from '../../types';
+import Modal from '../Modal/Modal';
+import api from '../../api/GalleryAPI';
+
+import './Gallery.css'
+
+type GalleryProps = {
+  countPerScroll: number,
 }
 
-function Gallery() {
+function Gallery({countPerScroll = 4}: GalleryProps) {
   const currentImageRef = useRef({} as ImageData);
-  const firstLoadRef = useRef(false);
-  const [images, setImages] = useState([] as ImageData[]);
+  const dispatch = useDispatch();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [currentImageIdx, setCurrentImageIdx] = useState(0);
   const [transform, setTransform] = useState("translateX(0px)");
-  const countPerScroll = 10;
-
+  const {images} = useSelector((state: RootState) => state.images);
+ 
   const openModal = () => setIsOpenModal(true);
-  const loadImage = () => api.getImages(1)
-    .then(data => {
-      setImages([...images, ...data]);
-    })
+  const loadImages = () => api.getImages(countPerScroll)
+    .then(data => dispatch(setImages(data)))
     .catch(console.log);
-
-  useLayoutEffect(() => {
-    if (firstLoadRef.current === false) {
-      firstLoadRef.current = true;
-      api.getImages(countPerScroll)
-        .then(data => {
-          setImages(data);
-          currentImageRef.current = data[currentImageIdx];
-        })
-        .catch(console.log);
-    }
-
-  }, []);
 
   useEffect(() => {
     setTransform(calcTransform(currentImageIdx));
@@ -48,7 +35,7 @@ function Gallery() {
     currentImageRef.current = images[idx];
     setCurrentImageIdx(idx);
 
-    if (idx > 0.7 * images.length) loadImage();
+    if (idx > 0.7 * images.length) loadImages();
   }
 
   const calcTransform = (idx: number) => {
